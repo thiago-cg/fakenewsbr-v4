@@ -409,9 +409,9 @@ Módulos principais: `investigation/expansion/` (`schema`, `http`, `sources`,
 
 ```bibtex
 @misc{fakenewsbr_v4,
-  title  = {FakenewsBR v4: A Portuguese Dataset for Misinformation Detection
+  title  = {FakeNewsBR v4: A Portuguese Dataset for Misinformation Detection
             and Claim Verification},
-  author = {Thiago C. G. and contributors},
+  author = {GONZAGA, C. Thiago},
   year   = {2026},
   note   = {291,521 rows; layers: checker, checker\_match, llm\_local,
             corroborated, provenance},
@@ -421,6 +421,5 @@ Módulos principais: `investigation/expansion/` (`schema`, `http`, `sources`,
 
 ### Manutenção e contato
 
-- Repositório: https://github.com/thiago-cg/FakenewsBR
 - Issues para erros de dados, PII e pedidos de remoção.
 - Changelog: v1 (39.466) → v2 (215.640) → v3 (242.913) → v4 (291.521).

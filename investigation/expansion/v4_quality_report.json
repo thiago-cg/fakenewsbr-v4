@@ -1,0 +1,50 @@
+{
+ "n_v1": 39466,
+ "n_v2": 291521,
+ "n_new": 252055,
+ "problemas": [],
+ "ok": true,
+ "exact_dups_remanescentes": 473,
+ "true_news_leak": 0,
+ "label": {
+  "true": 219300,
+  "fake": 32755
+ },
+ "por_era": {
+  "2018_2022": 115233,
+  "pos_gpt35": 98196,
+  "ate_2017": 31531
+ },
+ "label_x_era": {
+  "fake": {
+   "ate_2017": 4137,
+   "2018_2022": 12814,
+   "pos_gpt35": 13234
+  },
+  "true": {
+   "ate_2017": 27394,
+   "2018_2022": 102419,
+   "pos_gpt35": 84962
+  }
+ },
+ "ptpt": 52207,
+ "pct_ptpt": 20.71,
+ "top_datasets": {
+  "NEWS_PODER360": 77273,
+  "NEWS_BRASILDEFATO": 76219,
+  "NEWS_ECO": 41362,
+  "NEWS_OECO": 14602,
+  "FC_POLIGRAFO": 10831,
+  "FC_BOATOS": 10774,
+  "EXT_LIARBR": 6996,
+  "FC_EFARSAS": 3208,
+  "FC_G1": 3187,
+  "EXT_AVERITECBR": 2925,
+  "FC_BOATOS_VIRAL": 2360,
+  "FC_LUPA": 1437,
+  "FC_COMPROVA": 249,
+  "FC_FOLHA": 211,
+  "FC_SBT": 210
+ },
+ "mentions_ai": 1215
+}

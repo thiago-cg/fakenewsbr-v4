@@ -1,0 +1,2 @@
+# CSVs do dataset vao para o Git LFS (arquivos > 40 MB)
+data/*.csv filter=lfs diff=lfs merge=lfs -text

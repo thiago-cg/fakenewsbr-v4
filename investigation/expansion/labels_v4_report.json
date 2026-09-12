@@ -1,0 +1,17 @@
+{
+ "n": 291521,
+ "por_tier": {
+  "provenance": 206309,
+  "v1": 39466,
+  "checker": 38526,
+  "checker_match": 4119,
+  "llm_local": 3092,
+  "corroborated": 9
+ },
+ "com_train_label": 85212,
+ "train_fake": 60991,
+ "train_true": 24221,
+ "por_dataset_novos": {
+  "v1": 39466
+ }
+}

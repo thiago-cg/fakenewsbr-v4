@@ -1,0 +1,14 @@
+# Dependencias do pipeline que gera o FakenewsBR v4
+pandas>=2.0
+numpy>=1.24
+requests>=2.31
+scikit-learn>=1.3
+
+# Treino/avaliacao (BERTimbau) e encoder ONNX usado na verificacao
+torch>=2.0
+transformers>=4.40
+onnxruntime>=1.17
+
+# Opcional: planejador LLM (langchain_agent.py --planner llm)
+# langchain>=1.4
+# langchain-openai>=1.6

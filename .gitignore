@@ -1,0 +1,21 @@
+# dados coletados e processados nao fazem parte deste repositorio
+investigation/expansion/raw/
+investigation/expansion/processed/
+investigation/expansion/logs/
+investigation/expansion/legacy/
+
+# artefatos de modelo
+models/artifacts/
+*.npy
+*.onnx
+
+# python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# sistema
+.DS_Store
+Thumbs.db

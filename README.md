@@ -154,10 +154,14 @@ conteúdo verificados a cada merge).
 
 | arquivo | linhas | descrição |
 |---|---:|---|
-| `FakenewsBR_sanitized_v4.csv` | 291.521 | dataset principal, 23 colunas |
-| `FakenewsBR_v4_public.csv` | 291.521 | variante para publicação com PII mascarada (`scrub_pii.py`) |
-| `FakenewsBR_v4_provenance.csv` | 252.055 | proveniência das linhas novas (`rid`, `label_source`, `text_role`, `publisher`, `lang_variant`, `collector`, `source_url`, `collected_at`, `rating_norm`, `mentions_ai`) |
-| `FakenewsBR_v4_labels.csv` | 291.521 | camadas de rótulo e `train_label` (`label_tier`, `auto_label`, `confidence`, `method`, `evidence`) |
+| `data/FakenewsBR_v4_public.csv` | 291.521 | **arquivo distribuído** — dataset principal, 23 colunas, PII mascarada |
+| `data/FakenewsBR_v4_labels.csv` | 291.521 | camadas de rótulo e `train_label` (`label_tier`, `auto_label`, `confidence`, `method`, `evidence`) |
+| `data/FakenewsBR_v4_provenance.csv` | 252.055 | proveniência das linhas novas (`rid`, `label_source`, `text_role`, `publisher`, `lang_variant`, `collector`, `source_url`, `collected_at`, `rating_norm`, `mentions_ai`) |
+| `FakenewsBR_sanitized_v4.csv` | 291.521 | CSV de pesquisa completo (não distribuído; regenerável pelo pipeline deste repositório) |
+
+> Os CSVs são versionados com **Git LFS**. Instale o LFS antes de clonar:
+> `git lfs install && git clone <url>`; caso contrário você baixará apenas os
+> ponteiros.
 
 ### Colunas (23, mesma ordem da v1)
 
@@ -298,8 +302,8 @@ Detalhamento, URLs, licenças e status de opt-out em
 
 ```python
 from models import data
-d = data.load(csv="FakenewsBR_sanitized_v4.csv",
-              labels_csv="FakenewsBR_v4_labels.csv")   # 85.212 linhas
+d = data.load(csv="data/FakenewsBR_v4_public.csv",
+              labels_csv="data/FakenewsBR_v4_labels.csv")   # 85.212 linhas
 # grupos informativos (uso da cabeça DFR): is_balanced_group -> 36.896, 1,08:1
 w = data.group_balanced_weights(d)
 ```

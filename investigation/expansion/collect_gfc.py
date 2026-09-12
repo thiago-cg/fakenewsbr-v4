@@ -31,12 +31,29 @@ RAW = Path("investigation/expansion/raw")
 UA = "FakenewsBR-research/2.0"
 
 
-def _get(params: dict, timeout: int = 30) -> dict:
+def _get(params: dict, timeout: int = 30, retries: int = 5) -> dict:
+    """GET com retry/backoff em 429/5xx (a API devolve 503 esporadico)."""
+    import time
+
+    import requests
     params = {**params, "key": os.environ["GOOGLE_FACTCHECK_API_KEY"]}
-    url = f"{API}?{urllib.parse.urlencode(params)}"
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return json.loads(r.read().decode("utf-8"))
+    last = None
+    for attempt in range(retries):
+        try:
+            r = requests.get(API, params=params, timeout=timeout,
+                             headers={"User-Agent": UA})
+        except requests.RequestException as e:
+            last = e
+            time.sleep(min(2 ** attempt, 20))
+            continue
+        if r.status_code == 200:
+            return r.json()
+        if r.status_code in (429, 500, 502, 503, 504):
+            last = f"HTTP {r.status_code}"
+            time.sleep(min(2 ** attempt, 30))
+            continue
+        raise RuntimeError(f"HTTP {r.status_code}: {r.text[:200]}")
+    raise RuntimeError(f"falhou apos {retries} tentativas: {last}")
 
 
 def _records_from_claim(claim: dict) -> list[dict]:
@@ -47,8 +64,12 @@ def _records_from_claim(claim: dict) -> list[dict]:
     for rev in claim.get("claimReview", []) or []:
         pub = (rev.get("publisher") or {})
         site = (pub.get("site") or "").lower().removeprefix("www.")
-        rating = ((rev.get("reviewRating") or {}).get("textualRating")
-                  or (rev.get("reviewRating") or {}).get("ratingValue") or "")
+        rr = rev.get("reviewRating") or {}
+        rating = (rev.get("textualRating")
+                  or rr.get("textualRating")
+                  or rr.get("ratingValue") or "")
+        if not isinstance(rating, str):
+            rating = str(rating)
         label = sch.label_of_rating(rating)
         if label is None:
             continue
@@ -81,7 +102,8 @@ def _records_from_claim(claim: dict) -> list[dict]:
 
 
 def collect(out: Path, sites: list[str], max_pages: int,
-            max_age_days: int | None, page_size: int = 100) -> int:
+            max_age_days: int | None, page_size: int = 100,
+            sleep_s: float = 0.5) -> int:
     out.parent.mkdir(parents=True, exist_ok=True)
     n = 0
     with out.open("a", encoding="utf-8") as f:
@@ -108,7 +130,7 @@ def collect(out: Path, sites: list[str], max_pages: int,
                 print(f"[gfc] {site}: {len(claims)} claims, total {n}", flush=True)
                 if not token:
                     break
-                time.sleep(0.5)
+                time.sleep(sleep_s)
     return n
 
 
@@ -119,11 +141,13 @@ def main():
                     help="dominio; repetivel. Default: whitelist do feed.")
     ap.add_argument("--max-pages", type=int, default=50)
     ap.add_argument("--max-age-days", type=int, default=None)
+    ap.add_argument("--sleep", dest="sleep_s", type=float, default=0.5)
     a = ap.parse_args()
     if "GOOGLE_FACTCHECK_API_KEY" not in os.environ:
         raise SystemExit("defina GOOGLE_FACTCHECK_API_KEY no ambiente")
     sites = a.site or sorted(FEED_PUBLISHERS.keys())
-    n = collect(a.out, sites, a.max_pages, a.max_age_days)
+    n = collect(a.out, sites, a.max_pages, a.max_age_days,
+                sleep_s=a.sleep_s)
     print(f"[gfc] {n} registros -> {a.out}")
 
 

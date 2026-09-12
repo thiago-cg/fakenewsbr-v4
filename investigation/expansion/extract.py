@@ -249,8 +249,13 @@ def extract_all(raw_dir: Path, out: Path) -> dict:
                     except json.JSONDecodeError:
                         continue  # linha parcial (arquivo sendo escrito)
                     s["raw"] += 1
-                    if source in ("feed", "gfc"):
-                        rows = extract_feed(rec)
+                    if source in ("feed", "gfc") or source.startswith("gfc"):
+                        # gfc*.jsonl ja vem canonico (com _provenance) do
+                        # collect_gfc; feed.jsonl vem bruto do collect_feed
+                        if source.startswith("gfc") and "_provenance" in rec and rec.get("label") in ("fake", "true"):
+                            rows = [rec]
+                        else:
+                            rows = extract_feed(rec)
                     elif source in EXTRACTORS:
                         rows = EXTRACTORS[source](rec)
                     elif source in PORTAL_KEYS:

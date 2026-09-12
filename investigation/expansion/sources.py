@@ -99,6 +99,14 @@ FEED_PUBLISHERS = {
     "politica.estadao.com.br": ("FC_ESTADAO", "estadao", "pt-BR"),
     "jornalnh.com.br": ("FC_JORNALNH", "jornalnh", "pt-BR"),
     "nexojornal.com.br": ("FC_NEXO", "nexo", "pt-BR"),
+    "noticias.uol.com.br": ("FC_UOL", "uol", "pt-BR"),
+    "bol.uol.com.br": ("FC_UOL", "uol", "pt-BR"),
+    "uol.com.br": ("FC_UOL", "uol", "pt-BR"),
+    "checamos.afp.com": ("FC_AFP", "afp", "pt-BR"),
+    "agenciatatu.com.br": ("FC_TATU", "tatu", "pt-BR"),
+    "aletheiafact.org": ("FC_ALETHEIA", "aletheia", "pt-BR"),
+    "eleicoes.apublica.org": ("FC_APUBLICA", "apublica", "pt-BR"),
+    "oglobo.globo.com": ("FC_OGLOBO", "oglobo", "pt-BR"),
 }
 
 FEED_DOMAIN_ALLOW = tuple(FEED_PUBLISHERS.keys())

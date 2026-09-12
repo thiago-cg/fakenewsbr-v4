@@ -24,24 +24,24 @@ Conta autenticada via `hf auth login` (nesta maquina: **`titoverso`**). O
 `dataset_info`, features e split). O jeito mais simples e usar o script:
 
 ```bash
-python publish_hf.py            # cria <usuario_logado>/fakenewsbr-v4 e sobe tudo
+python publish_hf.py            # cria <usuario_logado>/fakenewsbr e sobe tudo
 # ou, manualmente:
-hf repo create titoverso/fakenewsbr-v4 --repo-type dataset
-hf upload titoverso/fakenewsbr-v4 README.md --repo-type dataset
-hf upload titoverso/fakenewsbr-v4 data/FakenewsBR_v4_public.csv data/ --repo-type dataset
+hf repo create titoverso/fakenewsbr --repo-type dataset
+hf upload titoverso/fakenewsbr README.md --repo-type dataset
+hf upload titoverso/fakenewsbr data/FakenewsBR_v6_public.csv data/ --repo-type dataset
 ```
 
 Sugestao de arquivos no HF:
-- `FakenewsBR_v4_public.csv` (principal)
-- `FakenewsBR_v4_labels.csv`
-- `FakenewsBR_v4_provenance.csv`
+- `FakenewsBR_v6_public.csv` (principal)
+- `FakenewsBR_v6_labels.csv`
+- `FakenewsBR_v6_provenance.csv`
 
 No card, ajuste o bloco `configs`/`dataset_info` se o nome do arquivo no HF
 for outro. Exemplo de carregamento:
 
 ```python
 from datasets import load_dataset
-ds = load_dataset("thiago-cg/fakenewsbr-v4", data_files="FakenewsBR_v4_public.csv")
+ds = load_dataset("titoverso/fakenewsbr", data_files="FakenewsBR_v6_public.csv")
 ```
 
 ## Checklist antes de tornar publico

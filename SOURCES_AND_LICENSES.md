@@ -24,6 +24,7 @@
 | grupo/fonte | origem | licença/termos | redistribuição |
 |---|---|---|---|
 | feed ClaimReview (`FC_LUPA`, `FC_COMPROVA`, `FC_FOLHA`, `FC_SBT`, `FC_NEXO`, parte de `FC_BOATOS`/`FC_G1`) | [Data Commons](https://datacommons.org/) (dump ClaimReview) + Google Fact Check Tools | termos do Data Commons/Google ⚠️ (verificar; tipicamente CC BY / uso com atribuição) | verificar e atribuir |
+| `FC_AOSFATOS`, `FC_ESTADAO`, `FC_OBSERVADOR`, `FC_COMPROVA`, `FC_UOL`, `FC_AFP`, `FC_APUBLICA`, `FC_TATU`, `FC_ALETHEIA` | Google Fact Check Tools API (`claims:search` por `reviewPublisherSiteFilter`) | metadado ClaimReview publicado pelos checadores, lido via API do Google (termos da API se aplicam) ⚠️ | uso de pesquisa; atribuir os checadores; a chave foi usada só via variável de ambiente, não versionada |
 | `FC_BOATOS`, `FC_BOATOS_VIRAL` | Boatos.org (WP REST; robots sem opt-out de IA) | conteúdo editorial sem licença explícita ⚠️ | usar trechos curtos + atribuição; pedir permissão |
 | `FC_EFARSAS` | E-farsas (WP REST) | idem ⚠️ | idem |
 | `FC_BEREIA` | Coletivo Bereia (WP REST) | idem ⚠️ | idem |
@@ -60,9 +61,9 @@ Verifica, Comprova, Observador) entram **apenas via metadado ClaimReview**
 | strings tipo telefone | 319 | muitos falsos positivos numéricos (datas, valores) |
 | CPF formatado | 1 | `\d{3}\.\d{3}\.\d{3}-\d{2}` |
 
-**Ação executada:** a variante `FakenewsBR_v4_public.csv` foi gerada com
+**Ação executada:** a variante `FakenewsBR_v6_public.csv` foi gerada com
 `python -m investigation.expansion.scrub_pii`, mascarando **705 e-mails, 3 CPFs
-e 3.106 strings tipo telefone** (mesmas 291.521 linhas). O CSV de pesquisa
+e 3.118 strings tipo telefone** (mesmas 297.672 linhas). O CSV de pesquisa
 permanece íntegro. Revisar também `factcheck_claimant` para pessoas privadas e
 os textos `FC_BOATOS_VIRAL` e `FakeWhatsApp.BR_2018`.
 

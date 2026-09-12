@@ -22,14 +22,14 @@ tags:
 - health
 - social-media
 - whatsapp
-pretty_name: FakenewsBR v4
+pretty_name: FakenewsBR v6
 size_categories:
 - 100K<n<1M
 configs:
 - config_name: default
   data_files:
   - split: train
-    path: FakenewsBR_sanitized_v4.csv
+    path: FakenewsBR_v6_public.csv
 dataset_info:
   features:
   - name: rid
@@ -83,7 +83,7 @@ dataset_info:
     num_examples: 291521
 ---
 
-# FakenewsBR v4
+# FakenewsBR v6
 
 > **Esta é a documentação de publicação do dataset. Antes de redistribuir, leia
 > [`SOURCES_AND_LICENSES.md`](SOURCES_AND_LICENSES.md): as licenças das fontes
@@ -91,15 +91,15 @@ dataset_info:
 
 ## TL;DR
 
-- **291.521 linhas** em português (pt-BR + pt-PT), tarefa de classificação
+- **297.672 linhas** em português (pt-BR + pt-PT), tarefa de classificação
   binária `fake` / `true`.
 - Constrói sobre a v1 (`FakenewsBR_sanitized.csv`, 39.466 linhas), preservada
   byte a byte, e adiciona cobertura temporal, checadores, PT-PT e rótulos em
   camadas auditáveis.
-- **Cada linha recebe uma camada de rótulo** (`label_tier` no arquivo
-  `FakenewsBR_v4_labels.csv`); só as camadas verificadas alimentam o treino
-  supervisionado.
-- Pool de treino verificado: **85.212 linhas** (60.991 `fake` / 24.221 `true`).
+- **Cada linha recebe uma camada de rótulo** (`label_tier`/`verified_label` no
+  arquivo `FakenewsBR_v6_labels.csv`); só as camadas verificadas alimentam o
+  treino supervisionado. O que não foi validado fica explicitamente `unknown`.
+- Pool de treino verificado: **91.080 linhas** (66.772 `fake` / 24.308 `true`).
   Nos grupos não degenerados: **36.896 linhas, razão 1,08:1**.
 - Licenças, opt-out de IA e achados de PII: ver `SOURCES_AND_LICENSES.md`.
 
@@ -143,7 +143,9 @@ proveniência.
 | v1 (`FakenewsBR_sanitized.csv`) | 39.466 | gerada com o framework [AKCIT-FN/fakenews-data](https://github.com/AKCIT-FN/fakenews-data) (MIT); base histórica do projeto |
 | v2 | 215.640 | expansão: checadores, portais, G1, feed ClaimReview |
 | v3 | 242.913 | + LIAR-BR e AVERITEC-BR traduzidos |
-| **v4** | **291.521** | + Polígrafo PT-PT completo (~12,1 mil artigos), camadas de verificação consolidadas |
+| v4 | 291.521 | + Polígrafo PT-PT completo (~12,1 mil artigos), camadas de verificação |
+| v5 | 296.377 | + Google Fact Check API por publisher (Aos Fatos, Estadão, Observador, Comprova, UOL) |
+| **v6** | **297.672** | + AFP Checamos/Pública/Tatu/Aletheia; `unknown` explícito para o que não foi validado |
 
 A v1 é **imutável e preservada integralmente** dentro da v4 (hashes de
 conteúdo verificados a cada merge).
@@ -154,10 +156,10 @@ conteúdo verificados a cada merge).
 
 | arquivo | linhas | descrição |
 |---|---:|---|
-| `data/FakenewsBR_v4_public.csv` | 291.521 | **arquivo distribuído** — dataset principal, 23 colunas, PII mascarada |
-| `data/FakenewsBR_v4_labels.csv` | 291.521 | camadas de rótulo e `train_label` (`label_tier`, `auto_label`, `confidence`, `method`, `evidence`) |
-| `data/FakenewsBR_v4_provenance.csv` | 252.055 | proveniência das linhas novas (`rid`, `label_source`, `text_role`, `publisher`, `lang_variant`, `collector`, `source_url`, `collected_at`, `rating_norm`, `mentions_ai`) |
-| `FakenewsBR_sanitized_v4.csv` | 291.521 | CSV de pesquisa completo (não distribuído; regenerável pelo pipeline deste repositório) |
+| `data/FakenewsBR_v6_public.csv` | 297.672 | **arquivo distribuído** — dataset principal, 23 colunas, PII mascarada |
+| `data/FakenewsBR_v6_labels.csv` | 297.672 | camadas de rótulo (`label_tier`, `auto_label`, `verified_label`, `confidence`, `method`, `evidence`, `train_label`) |
+| `data/FakenewsBR_v6_provenance.csv` | 258.206 | proveniência das linhas novas (`rid`, `label_source`, `text_role`, `publisher`, `lang_variant`, `collector`, `source_url`, `collected_at`, `rating_norm`, `mentions_ai`) |
+| `FakenewsBR_sanitized_v6.csv` | 297.672 | CSV de pesquisa completo (não distribuído; regenerável pelo pipeline deste repositório) |
 
 > Os CSVs são versionados com **Git LFS**. Instale o LFS antes de clonar:
 > `git lfs install && git clone <url>`; caso contrário você baixará apenas os
@@ -186,23 +188,25 @@ conteúdo verificados a cada merge).
 | `num_exclamations` / `num_questions` / `num_ellipsis` | int64 | pontuação em `text` |
 | `uppercase_word_ratio` | float | fração de palavras em caixa alta (len ≥ 3) |
 
-### Rótulo em camadas (`FakenewsBR_v4_labels.csv`)
+### Rótulo em camadas (`FakenewsBR_v6_labels.csv`)
 
-O dataset bruto tem apenas `label ∈ {fake, true}`. A **força** do rótulo está no
-arquivo de camadas:
+O dataset bruto tem apenas `label ∈ {fake, true}` (contrato de 23 colunas). A
+**força** do rótulo está no arquivo de camadas:
 
 | `label_tier` | linhas | significado |
 |---|---:|---|
 | `v1` | 39.466 | rótulo da base histórica |
-| `checker` | 38.526 | veredito de checador (feed, WP REST, sitemap, G1) ou corpus externo checado |
-| `checker_match` | 4.119 | correspondência ≥ 0,9 com ClaimReview (concordante) |
+| `checker` | 44.347 | veredito de checador (feed, WP REST, sitemap, G1, Google Fact Check API) ou corpus externo checado |
+| `checker_match` | 4.166 | correspondência ≥ 0,9 com ClaimReview (concordante) |
 | `llm_local` | 3.092 | verificação automática com evidência e confiança ≥ 0,8 (LLM local 2B) |
 | `corroborated` | 9 | ≥ 3 portais reputáveis independentes |
-| `provenance` | 206.309 | **sem verificação**: manchetes `true` por procedência (`NEWS_*`) |
+| `provenance` | 206.592 | **sem verificação**: manchetes `true` por procedência (`NEWS_*`) |
 
-`train_label` é `fake`/`true` apenas para as camadas verificadas (85.212 linhas;
-60.991 fake, 24.221 true). As 206.309 linhas `provenance` **não** têm rótulo de
-treino e devem ser usadas como OOD.
+A coluna **`verified_label`** resume a decisão: `fake` (66.772), `true`
+(24.308) e **`unknown` (206.592)** — todas as linhas de procedência não
+validadas. `train_label` é `fake`/`true` apenas para as camadas verificadas
+(**91.080** linhas). As 206.592 linhas `unknown` **nunca** entram no treino
+supervisionado e devem ser usadas como OOD/grupo degenerado (`press_true`).
 
 ### Exemplo (linha do grupo `FC_POLIGRAFO`)
 
@@ -223,13 +227,13 @@ treino e devem ser usadas como OOD.
 
 ### Estatísticas
 
-- **Rótulo (dataset completo):** `true` 230.530 (79,1%), `fake` 60.991 (20,9%).
-- **Rótulo (linhas novas):** `true` 219.300, `fake` 32.755.
-- **Eras (linhas novas):** ≤2017 31.509; 2018–nov/2022 115.232; dez/2022+ 98.219; sem data 7.095.
-- **Dialeto:** PT-PT 52.207 linhas novas (20,7%).
-- **Menções a IA/deepfake/ChatGPT:** 1.215 linhas novas.
-- **Comprimento (`text` novo):** p50 72 / p95 125 caracteres; `word_len` p50 12.
-- **Maiores grupos:** `NEWS_PODER360` 77.273; `NEWS_BRASILDEFATO` 76.219; `NEWS_ECO` 41.362; `fakes` 20.347; `NEWS_OECO` 14.602; `FC_POLIGRAFO` 10.831; `FC_BOATOS` 10.774; `Fake.br` 7.160; `EXT_LIARBR` 6.996; `FakeWhatsApp.BR_2018` 6.381.
+- **Rótulo (dataset completo):** `true` 230.900 (77,6%), `fake` 66.772 (22,4%).
+- **Rótulo (linhas novas):** `true` 219.670, `fake` 38.536.
+- **Eras (linhas novas):** ≤2017 31.818; 2018–nov/2022 115.903; dez/2022+ 101.233; sem data 9.252.
+- **Dialeto:** PT-PT 53.109 linhas novas (20,6%).
+- **Menções a IA/deepfake/ChatGPT:** 1.235 linhas novas.
+- **Comprimento (`text` novo):** p50 ~72 / p95 ~125 caracteres; `word_len` p50 ~12.
+- **Maiores grupos:** `NEWS_PODER360` 77.359; `NEWS_BRASILDEFATO` 76.297; `NEWS_ECO` 41.439; `fakes` 20.347; `NEWS_OECO` 14.665; `FC_POLIGRAFO` 10.831; `FC_BOATOS` 10.772; `Fake.br` 7.160; `EXT_LIARBR` 6.996; `FakeWhatsApp.BR_2018` 6.381; `FC_EFARSAS` 3.208; `FC_G1` 3.187.
 
 ## Dataset Creation
 
@@ -302,8 +306,8 @@ Detalhamento, URLs, licenças e status de opt-out em
 
 ```python
 from models import data
-d = data.load(csv="data/FakenewsBR_v4_public.csv",
-              labels_csv="data/FakenewsBR_v4_labels.csv")   # 85.212 linhas
+d = data.load(csv="data/FakenewsBR_v6_public.csv",
+              labels_csv="data/FakenewsBR_v6_labels.csv")   # 91.080 linhas
 # grupos informativos (uso da cabeça DFR): is_balanced_group -> 36.896, 1,08:1
 w = data.group_balanced_weights(d)
 ```
@@ -345,9 +349,10 @@ Recomendações metodológicas:
   linguagem ofensiva; use com cautela em contextos educacionais.
 - **Auditoria de PII (medida):** ocorrências mascaradas na variante pública:
   **705 e-mails, 3 CPFs e 3.106 strings tipo telefone**. A variante
-  **`FakenewsBR_v4_public.csv`** é gerada por
-  `investigation/expansion/scrub_pii.py` (mesmas 291.521 linhas e distribuição
-  de rótulo); o CSV de pesquisa permanece sem alteração para reprodutibilidade.
+**`FakenewsBR_v6_public.csv`** é gerada por
+`investigation/expansion/scrub_pii.py` (mesmas 297.672 linhas e distribuição
+de rótulo; máscaras: 705 e-mails, 3 CPFs, 3.118 telefones). O CSV de pesquisa
+permanece sem alteração para reprodutibilidade.
   Recomenda-se publicar a variante pública e manter a íntegra apenas para
   pesquisa mediante solicitação.
 - Nomes de figuras públicas aparecem como parte das alegações (esperado em
@@ -391,12 +396,12 @@ python -m investigation.expansion.extract
 python -m investigation.expansion.merge_and_audit --news-max-ratio 6 \
   --extra investigation/expansion/processed/records_ext_liarbr.jsonl \
           investigation/expansion/processed/records_ext_averitecbr.jsonl \
-  --out FakenewsBR_sanitized_v4.csv --provenance FakenewsBR_v4_provenance.csv
+  --out FakenewsBR_sanitized_v6.csv --provenance FakenewsBR_v6_provenance.csv
 
 # 4) camadas de rotulo
 python -m investigation.expansion.apply_verification \
-  --base FakenewsBR_v4_provenance.csv --v2 FakenewsBR_sanitized_v4.csv \
-  --out FakenewsBR_v4_labels.csv
+--base FakenewsBR_v6_provenance.csv --v2 FakenewsBR_sanitized_v6.csv \
+--out FakenewsBR_v6_labels.csv
 ```
 
 Módulos principais: `investigation/expansion/` (`schema`, `http`, `sources`,
@@ -408,18 +413,20 @@ Módulos principais: `investigation/expansion/` (`schema`, `http`, `sources`,
 ### Citação
 
 ```bibtex
-@misc{fakenewsbr_v4,
-  title  = {FakeNewsBR v4: A Portuguese Dataset for Misinformation Detection
+@misc{fakenewsbr_v6,
+  title  = {FakenewsBR v6: A Portuguese Dataset for Misinformation Detection
             and Claim Verification},
-  author = {GONZAGA, C. Thiago},
+  author = {Thiago C. G. and contributors},
   year   = {2026},
-  note   = {291,521 rows; layers: checker, checker\_match, llm\_local,
-            corroborated, provenance},
-  url    = {https://github.com/thiago-cg/FakenewsBR}
+  note   = {297,672 rows; layers: checker, checker\_match, llm\_local,
+            corroborated, provenance; unknown for unvalidated headlines},
+  url    = {https://github.com/thiago-cg/fakenewsbr-v4}
 }
 ```
 
 ### Manutenção e contato
 
+- Repositório: https://github.com/thiago-cg/FakenewsBR
 - Issues para erros de dados, PII e pedidos de remoção.
-- Changelog: v1 (39.466) → v2 (215.640) → v3 (242.913) → v4 (291.521).
+- Changelog: v1 (39.466) → v2 (215.640) → v3 (242.913) → v4 (291.521) →
+  v5 (296.377) → v6 (297.672).

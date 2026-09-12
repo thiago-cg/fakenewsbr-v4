@@ -108,7 +108,7 @@ def run(v2: Path, out: Path, threshold: float) -> dict:
     v1 = pd.read_csv("FakenewsBR_sanitized.csv", low_memory=False, usecols=["rid"])
     df = pd.read_csv(v2, low_memory=False)
     new = df.iloc[len(v1):].copy()
-    paths = [RAW / "feed.jsonl", RAW / "gfc.jsonl"]
+    paths = [RAW / "feed.jsonl", RAW / "gfc.jsonl", RAW / "gfc_afp.jsonl"]
     exact, inv, reviews = load_index(paths)
     print(f"indice: {len(reviews):,} checagens publicadas")
 

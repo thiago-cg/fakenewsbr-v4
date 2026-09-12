@@ -23,13 +23,13 @@ from huggingface_hub import HfApi, create_repo
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo", default=None,
-                    help="repo_id no Hugging Face (padrao: <usuario_logado>/fakenewsbr-v4)")
+                    help="repo_id no Hugging Face (padrao: <usuario_logado>/fakenewsbr)")
     ap.add_argument("--private", action="store_true")
     a = ap.parse_args()
 
     api = HfApi()
     who = api.whoami()
-    repo = a.repo or f"{who['name']}/fakenewsbr-v4"
+    repo = a.repo or f"{who['name']}/fakenewsbr"
     print(f"[hf] autenticado como {who['name']}")
 
     create_repo(repo, repo_type="dataset", exist_ok=True,

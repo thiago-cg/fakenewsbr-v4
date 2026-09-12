@@ -29,6 +29,7 @@ PROC = Path("investigation/expansion/processed")
 TIER_PRIORITY = {
     "v1": 1,            # linhas da v1 (rotulo da fonte, usadas no FT original)
     "checker": 1,       # rating de checador / dataset externo checado
+    "correction": 1,    # frase de correcao verbatim (label true)
     "checker_match": 2,  # match contra corpus ClaimReview (>= 0.9)
     "llm_local": 3,
     "corroborated": 4,
@@ -53,7 +54,8 @@ def make_labels(base: pd.DataFrame, matches: Path, corrob: Path,
                 local: Path) -> pd.DataFrame:
     df = base[["rid", "text", "label", "label_source"]].copy()
     df["label_tier"] = df["label_source"].map(
-        {"rating": "checker", "provenance": "provenance"}).fillna("v1")
+        {"rating": "checker", "provenance": "provenance",
+         "correction": "correction"}).fillna("v1")
     df["auto_label"] = ""
     df["confidence"] = None
     df["method"] = ""
@@ -111,13 +113,20 @@ def make_labels(base: pd.DataFrame, matches: Path, corrob: Path,
                 df.at[i, "evidence"] = str(getattr(r, "evidence", ""))[:200]
 
     train_ok = df["label_tier"].isin(
-        ["v1", "checker", "checker_match", "corroborated"])
+        ["v1", "checker", "correction", "checker_match", "corroborated"])
     train_ok |= (df["label_tier"] == "llm_local") & (
         pd.to_numeric(df["confidence"], errors="coerce") >= 0.8)
     df["train_label"] = None
     df.loc[train_ok, "train_label"] = df.loc[train_ok, "auto_label"].where(
         df.loc[train_ok, "auto_label"].isin(["fake", "true"]),
         df.loc[train_ok, "label"])
+
+    # auto_label explicito: v1/checker usam o rotulo da fonte; quem nao foi
+    # validado vira "unknown" (nunca true por procedencia)
+    df.loc[df["label_tier"].isin(["v1", "checker"]), "auto_label"] = df["label"]
+    df.loc[~df["train_label"].isin(["fake", "true"]), "auto_label"] = "unknown"
+    df["verified_label"] = df["auto_label"].where(
+        df["auto_label"].isin(["fake", "true"]), "unknown")
     return df
 
 
@@ -125,6 +134,8 @@ def report(df: pd.DataFrame, out: Path) -> dict:
     res = {
         "n": int(len(df)),
         "por_tier": df["label_tier"].value_counts().to_dict(),
+        "verified_label": df["verified_label"].value_counts().to_dict(),
+        "unknown": int((df["verified_label"] == "unknown").sum()),
         "com_train_label": int(df["train_label"].isin(["fake", "true"]).sum()),
         "train_fake": int((df["train_label"] == "fake").sum()),
         "train_true": int((df["train_label"] == "true").sum()),
@@ -133,6 +144,8 @@ def report(df: pd.DataFrame, out: Path) -> dict:
     }
     lines = ["# Rotulagem v3 — camadas", "",
              f"- linhas: {res['n']:,}",
+             f"- verified_label: {res['verified_label']}",
+             f"- unknown (nao validado): {res['unknown']:,}",
              f"- com rotulo de treino: {res['com_train_label']:,}",
              f"- treino fake/true: {res['train_fake']:,} / "
              f"{res['train_true']:,}",

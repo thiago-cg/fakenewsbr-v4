@@ -50,8 +50,9 @@ ds = load_dataset("thiago-cg/fakenewsbr-v4", data_files="FakenewsBR_v4_public.cs
 ## Checklist antes de tornar publico
 
 - [ ] Resolver os itens ⚠️ de `SOURCES_AND_LICENSES.md` (licencas de
-      checadores, portais, traducoes LIAR/AveriTeC, LLM4BR_300, Kaggle).
+      checadores, portais, traducoes LIAR/AveriTeC, LLM4BR_300, Kaggle) antes
+      de uso comercial do conteudo de terceiros.
 - [ ] Confirmar que a variante publica (PII mascarada) e a que sera distribuida.
-- [ ] Definir a licenca dos dados apos a revisao (atualmente `license: other`).
+- [x] Licenca definida: MIT permissiva para codigo e compilacao (`LICENSE`).
 - [ ] Adicionar tags/descricao no HF e no GitHub (fake-news, pt-BR, pt-PT).
 - [ ] Citar fontes e o framework AKCIT-FN nos materiais de divulgacao.

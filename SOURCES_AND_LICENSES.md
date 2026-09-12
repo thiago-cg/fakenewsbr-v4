@@ -68,11 +68,12 @@ os textos `FC_BOATOS_VIRAL` e `FakeWhatsApp.BR_2018`.
 
 ## 5. Licenciamento da compilação
 
-- **Código** do repositório: recomenda-se **MIT** (compatível com a base
-  AKCIT-FN e com o ecossistema). Criar `LICENSE`.
-- **Dataset compilado**: declarado como `license: other` no card, apontando para
-  este documento. Enquanto as licenças ⚠️ não forem resolvidas, publique como
-  **uso de pesquisa, não comercial**, com atribuição a cada fonte.
+- **Código** do repositório: **MIT** (arquivo [`LICENSE`](LICENSE)).
+- **Compilação, curadoria, anotações e camadas de rótulo** dos autores:
+  **MIT**, com atribuição e sem garantia. O card declara `license: mit`.
+- **Conteúdo de terceiros** permanece sob os termos das fontes originais; a
+  MIT do projeto não os relicencia. Itens ⚠️ continuam exigindo revisão para
+  redistribuição comercial.
 - Atribuições mínimas no card/HF: HF `ju-resplande`, AKCIT-FN, cabrau (GPL-3.0),
   GoloMarcos, Kaggle, Data Commons/Google, LIAR (Wang 2017), AVeriTeC
   (Schlichtkrull et al. 2023), tradutores do STIL 2025, e cada veículo de
@@ -80,9 +81,10 @@ os textos `FC_BOATOS_VIRAL` e `FakeWhatsApp.BR_2018`.
 
 ## 6. Checklist de release
 
-- [ ] Criar `LICENSE` do código (MIT) e `LICENSE-DATA`/termos próprios.
+- [x] Criar `LICENSE` (MIT) do código e da compilação anotada.
 - [ ] Resolver os itens ⚠️ (permissões de Boatos/E-farsas/Bereia/G1/Polígrafo/
-      portais; tradução LIAR/AVeriTeC; LLM4BR_300; Kaggle).
+      portais; tradução LIAR/AVeriTeC; LLM4BR_300; Kaggle) antes de uso
+      comercial/redistribuição do conteúdo de terceiros.
 - [ ] Checar termos do Data Commons/Google Fact Check para redistribuição.
 - [x] Rodar o scrub de PII (`FakenewsBR_v4_public.csv` gerado).
 - [ ] Incluir atribuições e citação no README/HF.

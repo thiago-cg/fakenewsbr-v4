@@ -3,9 +3,9 @@ language:
 - pt
 - pt-BR
 - pt-PT
-license: other
-license_name: see-sources-and-licenses
-license_link: SOURCES_AND_LICENSES.md
+license: mit
+license_name: mit
+license_link: LICENSE
 task_categories:
 - text-classification
 - text-retrieval
@@ -355,12 +355,16 @@ Recomendações metodológicas:
 
 ### Licenciamento
 
-- **Código** deste repositório: MIT (a definir no arquivo `LICENSE`).
-- **Compilação do dataset**: `license: other` — ver
-  [`SOURCES_AND_LICENSES.md`](SOURCES_AND_LICENSES.md). Várias fontes (Fake.br,
-  MuMiN-PT, LIAR/AveriTeC traduzidos, conteúdo de checadores) **não têm licença
-  explícita** ou têm licenças não comerciais; a redistribuição pública exige
-  revisão caso a caso. Enquanto isso, trate como **uso de pesquisa**.
+- **Código** deste repositório: **MIT** (arquivo [`LICENSE`](LICENSE)).
+- **Compilação, curadoria, anotações e camadas de rótulo** produzidas pelos
+  autores: **MIT** — uso, cópia, modificação e redistribuição permitidos, com
+  atribuição e sem garantia.
+- **Conteúdo de terceiros** incluído no dataset (textos de checadores e
+  portais, corpora históricos, traduções LIAR/AveriTeC): permanece sob os
+  termos das fontes originais, detalhados em
+  [`SOURCES_AND_LICENSES.md`](SOURCES_AND_LICENSES.md). A licença MIT do
+  projeto **não substitui** esses termos; para redistribuição comercial,
+  revise os itens marcados com ⚠️.
 
 ## Additional Information
 

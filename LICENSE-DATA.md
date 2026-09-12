@@ -1,23 +1,24 @@
-# Licenciamento do dataset
+# Licenciamento
 
-Este repositório contém **código** e **dados**, com licenças diferentes:
+## Código e compilação — MIT
 
-## Código
+O código-fonte (diretórios `investigation/`, `models/`, `sanitize_dataset.py`),
+a **compilação**, a **curadoria**, as **anotações** e as **camadas de rótulo**
+produzidas pelos autores são distribuídos sob a licença **MIT permissiva**
+(arquivo [`LICENSE`](LICENSE)): uso, cópia, modificação, fusão, publicação,
+distribuição, sublicenciamento e venda permitidos, com atribuição e sem
+garantia.
 
-O código-fonte (diretórios `investigation/`, `models/`, `sanitize_dataset.py`,
-scripts) é distribuído sob a licença **MIT** (arquivo [`LICENSE`](LICENSE)).
+## Conteúdo de terceiros
 
-## Dataset
+O dataset agrega textos de terceiros (checadores, portais, corpora históricos e
+traduções LIAR/AveriTeC). Esse conteúdo **permanece sob os termos das fontes
+originais** — incluindo materiais sem licença explícita e um corpus GPL-3.0
+(`FakeWhatsApp.BR_2018`). A licença MIT do projeto **não substitui** nem
+relicencia esses direitos.
 
-A compilação `FakenewsBR v4` (`data/*.csv`) é distribuída como
-**`license: other`** (uso de pesquisa) porque agrega fontes com licenças
-distintas — incluindo materiais **sem licença explícita** e um corpus
-**GPL-3.0** (`FakeWhatsApp.BR_2018`). O detalhamento fonte a fonte, o status de
-redistribuição e o checklist de release estão em
-[`SOURCES_AND_LICENSES.md`](SOURCES_AND_LICENSES.md).
-
-**Antes de reutilizar comercialmente ou redistribuir, verifique as licenças de
-cada fonte.** Até a revisão completa, considere os dados para **pesquisa**.
+Detalhamento fonte a fonte, status de redistribuição e itens que exigem revisão
+para uso comercial estão em [`SOURCES_AND_LICENSES.md`](SOURCES_AND_LICENSES.md).
 
 ## PII
 

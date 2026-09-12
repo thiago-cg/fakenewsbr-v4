@@ -19,19 +19,16 @@ Verificacoes pos-push:
 
 ## Hugging Face
 
-O `README.md` deste repositorio ja e o **dataset card** (YAML valido com
-`dataset_info`, features e split). Para publicar:
+Conta autenticada via `hf auth login` (nesta maquina: **`titoverso`**). O
+`README.md` deste repositorio ja e o **dataset card** (YAML valido com
+`dataset_info`, features e split). O jeito mais simples e usar o script:
 
 ```bash
-pip install -U huggingface_hub
-hf auth login
-
-# criar o dataset repo
-hf repo create thiago-cg/fakenewsbr-v4 --repo-type dataset
-
-# subir card + dados (o README vira o card; os CSVs vao por LFS do HF)
-hf upload thiago-cg/fakenewsbr-v4 README.md --repo-type dataset
-hf upload thiago-cg/fakenewsbr-v4 data/FakenewsBR_v4_public.csv data/ --repo-type dataset
+python publish_hf.py            # cria <usuario_logado>/fakenewsbr-v4 e sobe tudo
+# ou, manualmente:
+hf repo create titoverso/fakenewsbr-v4 --repo-type dataset
+hf upload titoverso/fakenewsbr-v4 README.md --repo-type dataset
+hf upload titoverso/fakenewsbr-v4 data/FakenewsBR_v4_public.csv data/ --repo-type dataset
 ```
 
 Sugestao de arquivos no HF:
@@ -49,6 +46,8 @@ ds = load_dataset("thiago-cg/fakenewsbr-v4", data_files="FakenewsBR_v4_public.cs
 
 ## Checklist antes de tornar publico
 
+- [ ] Rodar a validacao das `NEWS_*` (ver `PLANO_VALIDACAO_NEWS.md`) e anexar o
+      relatorio/tiers; sem isso, nao afirmar veracidade das linhas `press_true`.
 - [ ] Resolver os itens ⚠️ de `SOURCES_AND_LICENSES.md` (licencas de
       checadores, portais, traducoes LIAR/AveriTeC, LLM4BR_300, Kaggle) antes
       de uso comercial do conteudo de terceiros.

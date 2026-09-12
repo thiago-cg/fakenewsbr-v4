@@ -4,7 +4,8 @@ Pre-requisito (feito por voce, uma vez):
     hf auth login          # fluxo de navegador/device no seu terminal
 
 Depois, na raiz deste repositorio:
-    python publish_hf.py --repo thiago-cg/fakenewsbr-v4
+    python publish_hf.py                 # usa <usuario_logado>/fakenewsbr-v4
+    python publish_hf.py --repo usuario/nome
 
 O script cria o dataset repo (se nao existir), sobe o README (card), os tres
 CSVs de `data/` e o arquivo de licenca. Nao requer token em argumento: usa a
@@ -21,18 +22,19 @@ from huggingface_hub import HfApi, create_repo
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--repo", default="thiago-cg/fakenewsbr-v4",
-                    help="repo_id no Hugging Face (usuario/nome)")
+    ap.add_argument("--repo", default=None,
+                    help="repo_id no Hugging Face (padrao: <usuario_logado>/fakenewsbr-v4)")
     ap.add_argument("--private", action="store_true")
     a = ap.parse_args()
 
     api = HfApi()
     who = api.whoami()
+    repo = a.repo or f"{who['name']}/fakenewsbr-v4"
     print(f"[hf] autenticado como {who['name']}")
 
-    create_repo(a.repo, repo_type="dataset", exist_ok=True,
+    create_repo(repo, repo_type="dataset", exist_ok=True,
                 private=a.private)
-    print(f"[hf] repo dataset: {a.repo}")
+    print(f"[hf] repo dataset: {repo}")
 
     files = [
         ("README.md", "README.md"),
@@ -51,8 +53,8 @@ def main() -> int:
         print(f"[hf] enviando {local} -> {remote} "
               f"({p.stat().st_size/1e6:.1f} MB)")
         api.upload_file(path_or_fileobj=str(p), path_in_repo=remote,
-                        repo_id=a.repo, repo_type="dataset")
-    print(f"[hf] pronto: https://huggingface.co/datasets/{a.repo}")
+                        repo_id=repo, repo_type="dataset")
+    print(f"[hf] pronto: https://huggingface.co/datasets/{repo}")
     return 0
 
 

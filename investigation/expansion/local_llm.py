@@ -1,5 +1,8 @@
-"""Cliente da LLM local (Unsloth Studio, API OpenAI-compativel).
+"""Cliente da LLM local (llama.cpp via Unsloth Studio, API OpenAI-compativel).
 
+- Servidor: Unsloth Studio em `http://192.168.15.8:8888`, inferencia por
+  **llama.cpp** (modelos GGUF). Modelo usado na v4:
+  `openbmb/MiniCPM5-2B-GGUF`.
 - Base URL e chave vem de `LOCAL_LLM_BASE` / `LOCAL_LLM_KEY` ou dos arquivos
   em `%TEMP%/opencode/` gerados na configuracao.
 - Sem dependencia nova: usa `requests`.
